@@ -5,12 +5,14 @@
         password="{{ item.password }}"
         shell=/bin/bash
         state=present
+  sudo: yes
   with_items: users
 
 - name: add public keys
   authorized_key: user="{{ item.0.username }}"
                   key="{{ item.1 }}"
                   state=present
+  sudo: yes
   with_subelements:
     - users
     - keys

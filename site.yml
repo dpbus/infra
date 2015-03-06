@@ -1,0 +1,7 @@
+---
+# ansible-playbook site.yml -K -i hosts
+
+- hosts: all
+  roles:
+    - users
+    - common
