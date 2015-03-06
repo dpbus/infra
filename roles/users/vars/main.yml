@@ -1,0 +1,9 @@
+---
+
+users:
+  - username: dpb
+    comment: David Busse
+    groups: sudo
+    password: $6$Y.NEsLTl8xTgva9$PHR3/xp5TmXPP8v0p4ePsYVXrqjzHNgp6jEh/sS3ggnCJYePEx0uMpwmUglgFDeDZgvc9Ln5Y0UntTwSmP5cX/
+    keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCbzzB87xEp6kLbzAFCfHjCqXjui6wsrzNcwz4dISlFKTTfA+Qexi0RM3QE8u6uMpDbBNSTcTYB2vst+x91MyO4pHeGb73rApx1QrbiaukPVKRD2RM16GqLV961/miNL+EbblT2Epw8SizTjlH8K0x/lW8jgdyujz4FQRNO5mCYAZFjvAQ+pCSxl7eJx/a9fOrJdmwymemG2bqtQpcZgWgsnc4DtgA/fu+vZSw/VMNvR9O1ztrZsCadjlBTDNe5+Vq356HNnODhXAvSJ5kC0ZzEsYo6o1tM9pzI3uo5p2C8G3cb6MbFiPGd4PQjkA/T5IMdTHAeVOQnBHask6rwyDR3

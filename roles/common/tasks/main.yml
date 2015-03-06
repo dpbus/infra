@@ -1,0 +1,56 @@
+---
+
+- name: Set hostname
+  hostname: name="{{ hostname }}"
+  sudo: yes
+
+- name: Upgrade packages
+  apt: upgrade=dist update_cache=yes
+  sudo: yes
+
+- name: Install packages
+  apt: name="{{ item }}" update_cache=yes
+  sudo: yes
+  with_items:
+    - iptables
+    - vim
+
+- name: Copy iptables rules
+  copy: src=iptables.rules
+        dest=/etc/iptables.firewall.rules
+        force=yes
+        owner=root
+        group=root
+        mode=0644
+  sudo: yes
+  notify:
+    - Restore firewall rules
+
+- name: Copy iptables init
+  copy: src=iptables.init
+        dest=/etc/network/if-pre-up.d/firewall
+        force=yes
+        owner=root
+        group=root
+        mode=0755
+  sudo: yes
+
+- name: Set timezone
+  copy: content=Etc/UTC
+        dest=/etc/timezone
+        owner=root
+        group=root
+        mode=0644
+  sudo: yes
+  notify:
+    - Update timezone
+
+- name: Copy sshd_config
+  copy: src=sshd_config
+        dest=/etc/ssh/sshd_config force=yes
+        owner=root
+        group=root
+        mode=0644
+  sudo: yes
+  notify:
+    - Restart sshd

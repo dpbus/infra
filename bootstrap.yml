@@ -1,0 +1,11 @@
+---
+# ansible-playbook bootstrap.yml -K -e "host=<ip> hostname=<hostname>" -i hosts
+
+- hosts: "{{ host }}"
+  remote_user: root
+  roles:
+    - users 
+
+- hosts: "{{ host }}"
+  roles:
+    - common
