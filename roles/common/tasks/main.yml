@@ -9,7 +9,7 @@
   sudo: yes
 
 - name: Install packages
-  apt: name="{{ item }}" update_cache=yes
+  apt: name="{{ item }}" update_cache=yes state=installed
   sudo: yes
   with_items:
     - iptables
@@ -18,7 +18,6 @@
 - name: Copy iptables rules
   copy: src=iptables.rules
         dest=/etc/iptables.firewall.rules
-        force=yes
         owner=root
         group=root
         mode=0644
@@ -29,7 +28,6 @@
 - name: Copy iptables init
   copy: src=iptables.init
         dest=/etc/network/if-pre-up.d/firewall
-        force=yes
         owner=root
         group=root
         mode=0755
@@ -47,7 +45,7 @@
 
 - name: Copy sshd_config
   copy: src=sshd_config
-        dest=/etc/ssh/sshd_config force=yes
+        dest=/etc/ssh/sshd_config
         owner=root
         group=root
         mode=0644
