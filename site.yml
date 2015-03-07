@@ -5,3 +5,7 @@
   roles:
     - users
     - common
+
+- hosts: minecraft
+  roles:
+    - minecraft

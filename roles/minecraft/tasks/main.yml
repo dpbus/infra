@@ -1,0 +1,51 @@
+---
+
+- name: install dependencies
+  apt: name="{{ item }}" update_cache=yes state=installed
+  sudo: yes
+  with_items:
+    - screen
+    - rsync
+    - zip
+    - openjdk-7-jdk
+
+- name: create msm config
+  get_url: url=http://git.io/6eiCSg
+           dest=/etc/msm.conf
+           mode=0644
+  sudo: yes
+
+- name: create minecraft user
+  user: name=minecraft
+        home=/opt/msm
+        shell=/bin/bash
+        state=present
+  sudo: yes
+
+- name: create cron script
+  get_url: url=http://git.io/pczolg
+           dest=/etc/cron.d/msm
+           mode=0644
+  sudo: yes
+  notify:
+    - reload cron
+
+- name: create msm init script
+  get_url: url=http://git.io/J1GAxA
+           dest=/etc/init.d/msm
+           mode=0755
+  sudo: yes
+  notify:
+    - enable msm
+
+- name: link msm
+  file: src=/etc/init.d/msm
+        path=/usr/local/bin/msm
+        state=link
+  sudo: yes
+
+- name: update msm
+  command: /etc/init.d/msm update --noinput 
+  register: result
+  sudo: yes
+  changed_when: "'Updating MSM to' in result.stdout"

@@ -4,7 +4,7 @@
 - hosts: "{{ host }}"
   remote_user: root
   roles:
-    - users 
+    - users
 
 - hosts: "{{ host }}"
   roles:

@@ -1,21 +1,31 @@
 ---
 
-- name: Set hostname
+- name: set hostname
   hostname: name="{{ hostname }}"
   sudo: yes
 
-- name: Upgrade packages
+- name: update /etc/hosts
+  lineinfile: dest=/etc/hosts
+              regexp="^127\.0\.1\.1"
+              line="127.0.1.1 {{ hostname }}"
+              owner=root
+              group=root
+              mode=0644
+  sudo: yes
+
+
+- name: upgrade packages
   apt: upgrade=dist update_cache=yes
   sudo: yes
 
-- name: Install packages
+- name: install packages
   apt: name="{{ item }}" update_cache=yes state=installed
   sudo: yes
   with_items:
     - iptables
     - vim
 
-- name: Copy iptables rules
+- name: create iptables rules
   copy: src=iptables.rules
         dest=/etc/iptables.firewall.rules
         owner=root
@@ -23,9 +33,9 @@
         mode=0644
   sudo: yes
   notify:
-    - Restore firewall rules
+    - restore firewall rules
 
-- name: Copy iptables init
+- name: create iptables init script
   copy: src=iptables.init
         dest=/etc/network/if-pre-up.d/firewall
         owner=root
@@ -33,17 +43,18 @@
         mode=0755
   sudo: yes
 
-- name: Set timezone
-  copy: content=Etc/UTC
+- name: set /etc/timezone to UTC
+  copy: content="Etc/UTC
+        "
         dest=/etc/timezone
         owner=root
         group=root
         mode=0644
   sudo: yes
   notify:
-    - Update timezone
+    - update tzdata
 
-- name: Copy sshd_config
+- name: create sshd_config
   copy: src=sshd_config
         dest=/etc/ssh/sshd_config
         owner=root
@@ -51,4 +62,4 @@
         mode=0644
   sudo: yes
   notify:
-    - Restart sshd
+    - restart sshd

@@ -1,17 +1,17 @@
 ---
 
-- name: Update timezone
+- name: update tzdata
   command: dpkg-reconfigure --frontend noninteractive tzdata
   sudo: yes
 
-- name: Restart sshd
+- name: restart sshd
   service: name=ssh state=restarted enabled=yes
   sudo: yes
 
-- name: Restore firewall rules
+- name: restore firewall rules
   shell: "iptables-restore < /etc/iptables.firewall.rules"
   sudo: yes
 
-- name: Enable firewall
+- name: enable firewall
   service: name=iptables enabled=yes
   sudo: yes
