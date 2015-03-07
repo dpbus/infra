@@ -1,5 +1,5 @@
 - name: reload cron
-  service: name=cron state=reload enabled=yes
+  service: name=cron state=reloaded enabled=yes
   sudo: yes
 
 - name: enable msm

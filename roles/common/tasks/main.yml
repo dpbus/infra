@@ -44,8 +44,7 @@
   sudo: yes
 
 - name: set /etc/timezone to UTC
-  copy: content="Etc/UTC
-        "
+  copy: content=Etc/UTC
         dest=/etc/timezone
         owner=root
         group=root
