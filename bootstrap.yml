@@ -5,7 +5,27 @@
   remote_user: root
   roles:
     - users
+  tasks:
+    - name: upgrade packages
+      action: apt upgrade=dist update_cache=yes
+
+    - name: install sudo
+      action: apt pkg=sudo update_cache=yes state=installed
 
 - hosts: "{{ host }}"
+  sudo: yes
   roles:
     - common
+
+- hosts: "{{ host }}"
+  tasks:
+  - name: reboot server
+    command: sleep 2 && shutdown -r now "Rebooting after Ansible bootstrap"
+    async: 1
+    poll: 0
+    ignore_errors: true
+    sudo: yes
+
+  - name: wait for server start
+    local_action: wait_for host={{ inventory_hostname }} port=22 delay=15 state=started
+    sudo: no

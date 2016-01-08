@@ -1,0 +1,8 @@
+---
+
+users:
+  - username: dpb
+    comment: David Busse
+    groups: sudo
+    password: $6$Y.NEsLTl8xTgva9$PHR3/xp5TmXPP8v0p4ePsYVXrqjzHNgp6jEh/sS3ggnCJYePEx0uMpwmUglgFDeDZgvc9Ln5Y0UntTwSmP5cX/
+    github: dpbus

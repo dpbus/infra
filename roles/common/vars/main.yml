@@ -1,0 +1,9 @@
+---
+
+packages:
+  - sudo
+  - unattended-upgrades
+  - ufw
+  - fail2ban
+  - git
+  - vim

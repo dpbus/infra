@@ -1,3 +1,5 @@
+---
+
 - name: add users
   user: name="{{ item.username }}"
         comment="{{ item.comment }}"
@@ -5,14 +7,11 @@
         password="{{ item.password }}"
         shell=/bin/bash
         state=present
-  sudo: yes
   with_items: users
 
 - name: add public keys
-  authorized_key: user="{{ item.0.username }}"
-                  key="{{ item.1 }}"
+  authorized_key: user="{{ item.username }}"
+                  key="https://github.com/{{ item.github }}.keys"
+                  exclusive=yes
                   state=present
-  sudo: yes
-  with_subelements:
-    - users
-    - keys
+  with_items: users

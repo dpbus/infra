@@ -1,0 +1,13 @@
+---
+
+- name: enable ufw
+  ufw: state=enabled
+
+- name: deny inbound
+  ufw: policy=deny direction=incoming
+
+- name: allow outbound
+  ufw: policy=allow direction=outgoing
+
+- name: allow but limit ssh
+  ufw: rule=limit port=ssh proto=tcp
