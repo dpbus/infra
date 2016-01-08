@@ -6,6 +6,10 @@
     - users
     - common
 
+- hosts: postgres
+  roles:
+    - postgres
+
 - hosts: minecraft
   roles:
     - minecraft

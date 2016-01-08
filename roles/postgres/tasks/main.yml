@@ -1,0 +1,9 @@
+---
+
+- name: install postgres
+  apt: name={{ item }} update_cache=yes state=installed
+  with_items:
+    - postgresql
+    - postgresql-client
+  notify:
+    - restart postgres

@@ -1,0 +1,19 @@
+---
+
+- name: install ruby 2.1
+  apt: name=ruby=1:2.1.* update_cache=yes state=present
+
+- name: install bundler
+  gem: name=bundler user_install=no state=present
+
+- name: install nginx
+  apt: name=nginx update_cache=yes state=present
+  notify:
+    - restart nginx
+
+- name: allow http/https through firewall
+  ufw: rule=allow port={{ item }} proto=tcp
+  sudo: yes
+  with_items:
+    - 80
+    - 443
