@@ -39,9 +39,9 @@
     - enable msm
 
 - name: create cron script
-  get_url: url=http://git.io/pczolg
-           dest=/etc/cron.d/msm
-           mode=0644
+  copy: src=msm.cron
+        dest=/etc/cron.d/msm
+        mode=0644
   sudo: yes
   notify:
     - reload cron
