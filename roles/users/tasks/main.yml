@@ -1,17 +1,19 @@
 ---
 
 - name: add users
-  user: name="{{ item.username }}"
-        comment="{{ item.comment }}"
-        groups="{{ item.groups }}"
-        password="{{ item.password }}"
-        shell=/bin/bash
-        state=present
-  with_items: users
+  user:
+    name: "{{ item.username }}"
+    comment: "{{ item.comment }}"
+    groups: "{{ item.groups }}"
+    password: "{{ item.password }}"
+    shell: /bin/bash
+    state: present
+  with_items: "{{ users }}"
 
 - name: add public keys
-  authorized_key: user="{{ item.username }}"
-                  key="https://github.com/{{ item.github }}.keys"
-                  exclusive=yes
-                  state=present
-  with_items: users
+  authorized_key:
+    user: "{{ item.username }}"
+    key: "https://github.com/{{ item.github }}.keys"
+    exclusive: yes
+    state: present
+  with_items: "{{ users }}"

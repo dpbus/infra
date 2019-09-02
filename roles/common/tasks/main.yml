@@ -1,15 +1,14 @@
 ---
 
 - name: install base packages
-  apt: name="{{ item }}" update_cache=yes state=installed
-  with_items: packages
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: present
 
-- name: set /etc/timezone to UTC
-  copy: content="Etc/UTC\n"
-        dest=/etc/timezone
-        owner=root
-        group=root
-        mode=0644
+- name: set timezone to UTC
+  timezone:
+    name: UTC
   notify:
     - update tzdata
 

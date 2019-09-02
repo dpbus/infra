@@ -1,0 +1,7 @@
+---
+
+- hosts: "pihole"
+  become: yes
+  roles:
+    - common
+    - pihole

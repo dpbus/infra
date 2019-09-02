@@ -1,0 +1,19 @@
+---
+
+- name: allow DNS udp
+  ufw:
+    rule: allow
+    port: 53
+    proto: udp
+
+- name: allow DNS tcp
+  ufw:
+    rule: allow
+    port: 53
+    proto: tcp
+
+- name: allow HTTP
+  ufw:
+    rule: allow
+    port: http
+    proto: tcp
