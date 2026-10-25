@@ -1,0 +1,6 @@
+---
+caddy_domain: busse.net
+caddy_services: []
+
+caddy_custom_binary_url: "https://caddyserver.com/api/download?os=linux&arch=amd64&p=github.com%2Fcaddy-dns%2Fcloudflare"
+caddy_update_custom_binary: false

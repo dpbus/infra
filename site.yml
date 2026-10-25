@@ -5,3 +5,4 @@
   roles:
     - { role: base, tags: base }
     - { role: nfs, tags: nfs }
+    - { role: caddy, tags: caddy }

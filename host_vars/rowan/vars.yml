@@ -5,3 +5,14 @@ nfs_mounts:
   - src: "{{ nfs_server }}:/volume1/Media"
     path: /mnt/media
     opts: vers=4.1,_netdev,nofail,noatime,x-systemd.automount,x-systemd.mount-timeout=30
+
+caddy_email: david@busse.net
+caddy_cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
+
+caddy_services:
+  - name: gaia
+    upstream: "https://{{ nfs_server }}:5001"
+    insecure_tls: true
+  - name: kvm
+    upstream: https://10.0.10.95
+    insecure_tls: true

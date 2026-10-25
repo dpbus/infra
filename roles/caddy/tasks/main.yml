@@ -1,0 +1,101 @@
+---
+- name: Install Caddy apt signing key
+  ansible.builtin.shell: >
+    curl -1sLf https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+    | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+
+- name: Install Caddy apt repository
+  ansible.builtin.copy:
+    src: caddy-stable.list
+    dest: /etc/apt/sources.list.d/caddy-stable.list
+    owner: root
+    group: root
+    mode: "0644"
+  register: caddy_repo
+
+- name: Install caddy
+  ansible.builtin.apt:
+    name: caddy
+    state: present
+    update_cache: "{{ caddy_repo.changed }}"
+
+- name: Divert packaged binary to caddy.default
+  community.general.dpkg_divert:
+    path: /usr/bin/caddy
+    divert: /usr/bin/caddy.default
+    rename: true
+
+- name: Download custom binary with Cloudflare DNS plugin
+  ansible.builtin.get_url:
+    url: "{{ caddy_custom_binary_url }}"
+    dest: /usr/bin/caddy.custom
+    owner: root
+    group: root
+    mode: "0755"
+    force: "{{ caddy_update_custom_binary }}"
+  notify: Restart caddy
+
+- name: Verify custom binary has the Cloudflare DNS module
+  ansible.builtin.command: /usr/bin/caddy.custom list-modules
+  register: caddy_modules
+  changed_when: false
+  failed_when: "'dns.providers.cloudflare' not in caddy_modules.stdout"
+  check_mode: false
+
+- name: Register binaries as alternatives
+  community.general.alternatives:
+    name: caddy
+    link: /usr/bin/caddy
+    path: "{{ item.path }}"
+    priority: "{{ item.priority }}"
+    state: auto
+  loop:
+    - { path: /usr/bin/caddy.default, priority: 10 }
+    - { path: /usr/bin/caddy.custom, priority: 50 }
+
+- name: Create caddy.service drop-in directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/caddy.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Load environment file in caddy.service
+  ansible.builtin.copy:
+    src: override.conf
+    dest: /etc/systemd/system/caddy.service.d/override.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart caddy
+
+- name: Write Cloudflare API token
+  ansible.builtin.template:
+    src: caddy.env.j2
+    dest: /etc/caddy/caddy.env
+    owner: root
+    group: root
+    mode: "0600"
+  diff: false
+  notify: Restart caddy
+
+- name: Write Caddyfile
+  ansible.builtin.template:
+    src: Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+    owner: root
+    group: root
+    mode: "0644"
+    validate: bash -c 'set -a; . /etc/caddy/caddy.env; caddy validate --adapter caddyfile --config %s'
+  notify: Reload caddy
+
+- name: Enable caddy
+  ansible.builtin.systemd_service:
+    name: caddy
+    enabled: true
+    state: started
