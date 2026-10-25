@@ -1,0 +1,13 @@
+---
+kernel_backports_release: trixie-backports
+
+kernel_backports_packages:
+  - linux-image-amd64
+  - linux-headers-amd64
+  - firmware-linux-nonfree
+  - firmware-realtek
+  - firmware-intel-graphics
+  - firmware-intel-misc
+
+kernel_packages:
+  - intel-microcode

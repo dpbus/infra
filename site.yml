@@ -4,5 +4,6 @@
   become: true
   roles:
     - { role: base, tags: base }
+    - { role: kernel, tags: kernel }
     - { role: nfs, tags: nfs }
     - { role: caddy, tags: caddy }

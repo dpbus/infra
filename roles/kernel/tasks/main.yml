@@ -1,0 +1,21 @@
+---
+- name: Install backports apt source
+  ansible.builtin.copy:
+    src: debian-backports.sources
+    dest: /etc/apt/sources.list.d/debian-backports.sources
+    owner: root
+    group: root
+    mode: "0644"
+  register: kernel_backports_source
+
+- name: Install kernel and firmware from backports
+  ansible.builtin.apt:
+    name: "{{ kernel_backports_packages }}"
+    default_release: "{{ kernel_backports_release }}"
+    state: present
+    update_cache: "{{ kernel_backports_source.changed }}"
+
+- name: Install microcode
+  ansible.builtin.apt:
+    name: "{{ kernel_packages }}"
+    state: present
