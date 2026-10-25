@@ -1,0 +1,54 @@
+---
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: rowan
+
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ base_timezone }}"
+
+- name: Install base packages
+  ansible.builtin.apt:
+    name: "{{ base_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Add admin user to groups
+  ansible.builtin.user:
+    name: "{{ base_admin_user }}"
+    groups: "{{ base_admin_groups }}"
+    append: true
+
+- name: Set default editor to vim
+  community.general.alternatives:
+    name: editor
+    path: /usr/bin/vim.basic
+
+- name: Install sshd hardening drop-in
+  ansible.builtin.copy:
+    src: 10-hardening.conf
+    dest: /etc/ssh/sshd_config.d/10-hardening.conf
+    owner: root
+    group: root
+    mode: "0644"
+    validate: /usr/sbin/sshd -t -f %s
+  notify: Reload ssh
+
+- name: Enable unattended upgrades
+  ansible.builtin.copy:
+    src: 20auto-upgrades
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Enable base services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - ssh
+    - avahi-daemon
+    - unattended-upgrades

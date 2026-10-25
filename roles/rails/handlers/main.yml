@@ -1,6 +1,0 @@
----
-
-- include: ../../common/handlers/main.yml
-
-- name: restart nginx
-  service: name=nginx state=restarted

@@ -1,8 +1,0 @@
----
-
-- hosts: minecraft
-  sudo: yes
-  roles:
-    - common
-    - swap
-    - minecraft

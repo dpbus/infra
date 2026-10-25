@@ -1,15 +1,6 @@
 ---
-# ansible-playbook site.yml -K -i hosts
-
-- hosts: all
+- name: Configure rowan
+  hosts: rowan
+  become: true
   roles:
-    - users
-    - common
-
-- hosts: postgres
-  roles:
-    - postgres
-
-- hosts: minecraft
-  roles:
-    - minecraft
+    - { role: base, tags: base }

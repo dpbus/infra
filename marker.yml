@@ -1,6 +1,0 @@
----
-
-- hosts: marker
-  sudo: yes
-  roles:
-    - marker

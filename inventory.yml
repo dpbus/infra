@@ -1,0 +1,6 @@
+---
+all:
+  hosts:
+    rowan:
+      ansible_host: rowan.local
+      ansible_user: dpb

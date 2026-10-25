@@ -1,0 +1,29 @@
+---
+base_timezone: America/Chicago
+
+base_packages:
+  - apt-file
+  - apt-listchanges
+  - avahi-daemon
+  - bash-completion
+  - bind9-dnsutils
+  - ca-certificates
+  - curl
+  - dmidecode
+  - ethtool
+  - git
+  - lsof
+  - openssh-server
+  - pciutils
+  - sudo
+  - tmux
+  - unattended-upgrades
+  - usbutils
+  - vim
+  - wget
+  - zsh
+
+base_admin_user: dpb
+base_admin_groups:
+  - sudo
+  - video

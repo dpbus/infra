@@ -1,9 +1,0 @@
----
-
-- name: reload cron
-  service: name=cron state=restarted enabled=yes  # state=reloaded doesn't work on deb 8
-  sudo: yes
-
-- name: enable msm
-  service: name=msm state=started enabled=yes
-  sudo: yes
