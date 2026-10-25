@@ -1,1 +1,7 @@
 ---
+nfs_server: 10.0.10.68
+
+nfs_mounts:
+  - src: "{{ nfs_server }}:/volume1/Media"
+    path: /mnt/media
+    opts: vers=4.1,_netdev,nofail,noatime,x-systemd.automount,x-systemd.mount-timeout=30

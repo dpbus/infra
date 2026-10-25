@@ -1,0 +1,30 @@
+---
+- name: Install nfs-common
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+
+- name: Create mount points
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+  loop: "{{ nfs_mounts }}"
+
+- name: Add fstab entries
+  ansible.posix.mount:
+    src: "{{ item.src }}"
+    path: "{{ item.path }}"
+    fstype: nfs
+    opts: "{{ item.opts }}"
+    state: present
+  loop: "{{ nfs_mounts }}"
+  notify: Reload systemd
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Start automount units
+  ansible.builtin.systemd_service:
+    name: "{{ item.path | regex_replace('^/', '') | replace('/', '-') }}.automount"
+    state: started
+  loop: "{{ nfs_mounts }}"
