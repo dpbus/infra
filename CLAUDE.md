@@ -10,14 +10,16 @@ this repo codifies it. Detailed notes on the current setup: `docs/rowan.md`.
   1. Read the actual files on rowan over SSH (`ssh rowan.local sudo cat ...`).
      rowan is the source of truth; `docs/rowan.md` may be slightly off.
   2. Write the role to match the current state.
-  3. `ansible-playbook site.yml --check --diff -K --tags <role>` until the diff
+  3. `ansible-playbook site.yml --check --diff --tags <role>` until the diff
      is empty (or only shows changes I've agreed to).
 - **Network and kernel roles are dangerous.** A bad bond0 or interfaces change
   cuts off SSH. Build these last, and assume I need the GL.iNet KVM console as a
   fallback. Never restart networking in a handler without asking.
 - **Secrets** go in Ansible Vault (`host_vars/rowan/vault.yml`), never plaintext.
-  Currently one secret: the Cloudflare API token.
-- Sudo needs a password: playbooks run with `-K`.
+  Secrets: the Cloudflare API token and `ansible_become_password` (sudo).
+  The vault password comes from 1Password: `.vault_pass` (gitignored) is a
+  script running `op read`, wired up via `vault_password_file` in ansible.cfg.
+  No `-K` or `--ask-vault-pass` needed.
 - Run from my Mac (`brew install ansible`). No agent on rowan.
 
 ## Layout
