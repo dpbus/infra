@@ -1,4 +1,9 @@
 ---
+network_bond_members:
+  - enp1s0
+  - enp88s0
+network_bond_primary: enp1s0
+
 nfs_server: 10.0.10.68
 
 nfs_mounts:

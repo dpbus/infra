@@ -1,0 +1,16 @@
+---
+- name: Install ifupdown and ifenslave
+  ansible.builtin.apt:
+    name:
+      - ifupdown
+      - ifenslave
+    state: present
+
+- name: Write network interfaces
+  ansible.builtin.template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Warn that a reboot is needed to apply network changes

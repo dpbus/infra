@@ -1,0 +1,4 @@
+---
+- name: Warn that a reboot is needed to apply network changes
+  ansible.builtin.debug:
+    msg: /etc/network/interfaces changed. Networking was NOT restarted. Review it, then reboot with the KVM console available.

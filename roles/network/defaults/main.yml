@@ -1,0 +1,6 @@
+---
+network_bond_name: bond0
+network_bond_mode: active-backup
+network_bond_miimon: 100
+network_bond_members: []
+network_bond_primary: ""

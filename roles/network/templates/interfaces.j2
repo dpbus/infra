@@ -1,0 +1,11 @@
+source /etc/network/interfaces.d/*
+
+auto lo
+iface lo inet loopback
+
+auto {{ network_bond_name }}
+iface {{ network_bond_name }} inet dhcp
+    bond-slaves {{ network_bond_members | join(' ') }}
+    bond-mode {{ network_bond_mode }}
+    bond-primary {{ network_bond_primary }}
+    bond-miimon {{ network_bond_miimon }}
