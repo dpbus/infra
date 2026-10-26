@@ -11,6 +11,8 @@ nfs_mounts:
     path: /mnt/media
     opts: vers=4.1,_netdev,nofail,noatime,x-systemd.automount,x-systemd.mount-timeout=30
 
+channels_media_dir: /mnt/media
+
 caddy_email: david@busse.net
 caddy_cloudflare_api_token: "{{ vault_cloudflare_api_token }}"
 
@@ -21,3 +23,5 @@ caddy_services:
   - name: kvm
     upstream: https://10.0.10.95
     insecure_tls: true
+  - name: channels
+    upstream: http://127.0.0.1:8089

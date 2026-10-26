@@ -27,15 +27,35 @@
     divert: /usr/bin/caddy.default
     rename: true
 
+- name: Get installed custom binary version
+  ansible.builtin.command: /usr/bin/caddy.custom version
+  register: caddy_custom_installed
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
 - name: Download custom binary with Cloudflare DNS plugin
   ansible.builtin.get_url:
     url: "{{ caddy_custom_binary_url }}"
     dest: /usr/bin/caddy.custom
+    mode: "0755"
+    force: true
+  when: (caddy_custom_installed.stdout | default('')).split(' ') | first != caddy_custom_version
+  notify: Restart caddy
+
+- name: Set custom binary ownership
+  ansible.builtin.file:
+    path: /usr/bin/caddy.custom
     owner: root
     group: root
     mode: "0755"
-    force: "{{ caddy_update_custom_binary }}"
-  notify: Restart caddy
+
+- name: Verify custom binary version
+  ansible.builtin.command: /usr/bin/caddy.custom version
+  register: caddy_custom_version_check
+  changed_when: false
+  failed_when: caddy_custom_version_check.stdout.split(' ') | first != caddy_custom_version
+  check_mode: false
 
 - name: Verify custom binary has the Cloudflare DNS module
   ansible.builtin.command: /usr/bin/caddy.custom list-modules

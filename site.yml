@@ -8,3 +8,4 @@
     - { role: network, tags: network }
     - { role: nfs, tags: nfs }
     - { role: caddy, tags: caddy }
+    - { role: channels, tags: channels }

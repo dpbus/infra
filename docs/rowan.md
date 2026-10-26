@@ -127,6 +127,7 @@ bond backup.
 | `rowan.busse.net` | A | 10.0.10.55 |
 | `gaia.busse.net` | CNAME | rowan.busse.net |
 | `kvm.busse.net` | CNAME | rowan.busse.net |
+| `channels.busse.net` | CNAME | rowan.busse.net |
 
 Every service name points at **rowan**, not at the device. Caddy routes by hostname.
 
@@ -235,14 +236,13 @@ sudo journalctl -u caddy -n 50 --no-pager          # recent log
 
 ### Update the custom Caddy binary (every few months)
 
+Bump `caddy_custom_version` in `roles/caddy/defaults/main.yml` to the new
+release tag, then run the caddy role. It downloads the pinned version, verifies
+the version and the Cloudflare module, and restarts Caddy.
+
 ```bash
-cd /tmp
-curl -o caddy "https://caddyserver.com/api/download?os=linux&arch=amd64&p=github.com%2Fcaddy-dns%2Fcloudflare"
-chmod +x caddy
-./caddy version
-./caddy list-modules | grep cloudflare      # must print dns.providers.cloudflare
-sudo mv caddy /usr/bin/caddy.custom
-sudo systemctl restart caddy
+ansible-playbook site.yml --check --diff --tags caddy
+ansible-playbook site.yml --tags caddy
 ```
 
 ---

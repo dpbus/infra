@@ -1,0 +1,10 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Restart channels-dvr
+  ansible.builtin.systemd_service:
+    name: channels-dvr
+    state: restarted
+  ignore_errors: "{{ ansible_check_mode }}"

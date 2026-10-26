@@ -1,0 +1,7 @@
+---
+channels_user: channels
+channels_group: channels
+channels_extra_groups:
+  - video
+  - render
+channels_install_dir: /usr/local/channels-dvr

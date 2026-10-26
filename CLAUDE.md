@@ -58,7 +58,8 @@ not a reference for anything here.
   then a **custom binary with the caddy-dns/cloudflare plugin** swapped in via
   Caddy's documented dpkg-divert + update-alternatives method
   (`/usr/bin/caddy.default` priority 10, `/usr/bin/caddy.custom` priority 50).
-  apt never updates the custom binary.
+  apt never updates the custom binary. Its version is pinned by
+  `caddy_custom_version` in the caddy role; bump it to upgrade.
 - Caddy: one wildcard cert `*.busse.net` via DNS-01 (Cloudflare, zone-scoped
   token). Token in `/etc/caddy/caddy.env` (root, 600) loaded by a systemd
   drop-in `EnvironmentFile=`. Host matchers per service, final `handle { abort }`.
@@ -69,8 +70,10 @@ not a reference for anything here.
   DSM side squashes all users to admin (manual, not managed here).
 - **Channels DVR**: native install (not Docker, not k3s), into
   `/usr/local/channels-dvr`, running as a **dedicated system user `channels`**
-  (groups video, render; nologin shell) via a systemd drop-in that sets
-  `User=`/`Group=` and `RequiresMountsFor=/mnt/media`. Channels self-updates.
+  (groups video, render; nologin shell). The official `setup.sh` is run with
+  `DOWNLOAD_ONLY=1` (binaries + layout only); Ansible owns the systemd unit,
+  which sets `User=`/`Group=` and `RequiresMountsFor=/mnt/media`. Channels
+  self-updates inside its own directory.
   Migrating from the old server on Ursa (Mac mini). Clients are Apple TVs
   (direct play), so hardware transcoding is nice-to-have.
 - SSH: key-only, no root login (`/etc/ssh/sshd_config.d/10-hardening.conf`).
@@ -78,11 +81,16 @@ not a reference for anything here.
 
 ## Status / next steps
 
-1. Scaffold the repo and confirm `ansible rowan -m ping`.
-2. Roles in this order: base → nfs → caddy → channels → network → kernel.
-3. Channels DVR is **not installed yet** — write the `channels` role to do the
-   install fresh (official setup script, then the user/ownership/drop-in changes),
-   rather than codifying a hand install.
+1. All six roles are written and converged: a full `--check --diff` run is
+   clean. `site.yml` runs them in rebuild order: base → kernel → network →
+   nfs → caddy → channels. A rebuild needs a reboot after kernel and again
+   after network; neither role reboots on its own.
+2. Channels DVR is installed and served at `channels.busse.net`. Remaining
+   setup is in its web UI: recordings directory under `/mnt/media`, migration
+   from Ursa.
+3. Open question: unattended-upgrades is on Debian's stock origins (security
+   plus point-release updates), not security-only as decided above. Tighten
+   via a `52unattended-upgrades-local` drop-in if wanted.
 4. Later: Docker, Home Assistant, k3s (GitOps for in-cluster stuff), Tailscale
    split DNS for remote access, maybe OpenTofu for Cloudflare/UniFi DNS.
 

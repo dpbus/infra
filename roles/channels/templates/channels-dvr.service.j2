@@ -1,0 +1,19 @@
+[Unit]
+Description=Channels DVR
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor={{ channels_media_dir }}
+
+[Service]
+Type=simple
+User={{ channels_user }}
+Group={{ channels_group }}
+WorkingDirectory={{ channels_install_dir }}/data
+ExecStart={{ channels_install_dir }}/latest/channels-dvr -dir {{ channels_install_dir }}/data
+Restart=always
+RestartSec=10
+LimitNOFILE=8192
+OOMScoreAdjust=-500
+
+[Install]
+WantedBy=multi-user.target
