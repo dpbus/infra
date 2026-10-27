@@ -247,6 +247,40 @@ ansible-playbook site.yml --tags caddy
 
 ---
 
+## Channels DVR
+
+Native install in `/usr/local/channels-dvr`, running as the `channels` system
+user (groups video, render). Web UI at `https://channels.busse.net` (Caddy →
+`127.0.0.1:8089`). No authentication on the local API or UI; LAN is trusted.
+
+| Unit | What |
+|---|---|
+| `channels-dvr.service` | the DVR; requires `/mnt/media` to be mounted |
+| `channels-refresh.timer` | hourly: fetch guide updates, then refresh virtual channels |
+
+Channels self-updates inside its own directory. The binaries live in
+`<version>/` subdirectories with a `latest` symlink.
+
+```bash
+sudo systemctl start channels-refresh.service     # run the refresh now
+systemctl list-timers channels-refresh.timer      # last/next run
+journalctl -u channels-refresh.service -n 20      # refresh output
+curl -s http://127.0.0.1:8089/log | tail -50      # DVR log
+```
+
+Undocumented API calls the web UI's quick actions make (all unauthenticated):
+
+```bash
+curl -X PUT http://127.0.0.1:8089/dvr/guide                   # Fetch Guide Updates
+curl -X PUT "http://127.0.0.1:8089/dvr/guide?force=true"      # Re-Download Entire Guide
+curl -X PUT http://127.0.0.1:8089/dvr/lineups/X-VIRTUAL       # Refresh Virtual Channels
+curl -X PUT http://127.0.0.1:8089/dvr/scanner/scan            # Scan Personal Media
+curl -X PUT http://127.0.0.1:8089/dvr/scanner/imports/prune   # Prune Removed Media
+curl -X DELETE http://127.0.0.1:8089/dvr/cache                # Clear Streaming Cache
+```
+
+---
+
 ## Troubleshooting
 
 **A new name works with `dig` but not in curl/browser (Mac)**

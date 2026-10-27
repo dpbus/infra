@@ -1,0 +1,9 @@
+[Unit]
+Description=Fetch Channels DVR guide updates and refresh virtual channels
+Requires=channels-dvr.service
+After=channels-dvr.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/curl -fsS -X PUT http://127.0.0.1:{{ channels_port }}/dvr/guide
+ExecStart=/usr/bin/curl -fsS -X PUT http://127.0.0.1:{{ channels_port }}/dvr/lineups/X-VIRTUAL
